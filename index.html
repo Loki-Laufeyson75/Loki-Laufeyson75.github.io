@@ -18,7 +18,6 @@
             min-height: 100vh;
         }
 
-        /* 数字测算容器 - 悬浮置顶 */
         .calculator-container {
             position: fixed;
             top: 0;
@@ -28,7 +27,7 @@
             justify-content: center;
             align-items: flex-start;
             padding: 20px;
-            z-index: 99; /* 保证在图片上方 */
+            z-index: 99;
             pointer-events: none;
         }
 
@@ -55,9 +54,9 @@
             margin-bottom: 25px;
             align-items: center;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
-        /* 下拉选择框样式 */
         .number-select {
             width: 120px;
             height: 44px;
@@ -95,7 +94,6 @@
             transform: translateY(-2px);
         }
 
-        /* 遮罩压暗层 */
         .overlay {
             position: fixed;
             top: 0;
@@ -114,7 +112,6 @@
             display: flex;
         }
 
-        /* 结果弹窗 */
         .popup {
             width: 320px;
             padding: 35px 30px;
@@ -126,9 +123,24 @@
             color: #333;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             animation: popUp 0.3s ease;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 20px;
+            color: #999;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .close-btn:hover {
+            color: #333;
         }
 
-        /* 动画效果 */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -139,34 +151,42 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* 图片区域样式 - 左右铺满页面 */
+        /* 图片：左右贴屏，上下不变 */
         .image-section {
-            margin-top: 320px; /* 避开测算卡片 */
-            width: 100vw; /* 宽度占满屏幕 */
-            padding: 0 !important; /* 去掉左右内边距 */
-            margin-left: calc(-50vw + 50%); /* 消除body默认居中导致的空白 */
+            margin-top: 320px;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
         }
 
         .photo {
-            width: 100%; /* 宽度100%铺满 */
-            height: auto; /* 高度自适应，保持比例 */
-            max-height: 90vh; /* 限制最大高度，避免溢出 */
-            border-radius: 0 !important; /* 可选：去掉圆角，完全铺满 */
-            box-shadow: none !important; /* 可选：去掉阴影，完全贴合 */
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        
+        @media (max-width: 400px) {
+            .container {
+                width: 100%;
+                padding: 30px 15px;
+            }
+            .image-section {
+                margin-top: 280px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 数字测算模块（悬浮置顶） -->
+
     <div class="calculator-container">
         <div class="container">
             <h2 class="title">数字测算</h2>
             <div class="select-group">
                 <select class="number-select" id="num1">
-                    <option value="" selected disabled>请选择数字</option>
+                    <option value="" selected>请选择数字</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -177,7 +197,7 @@
                     <option value="9">9</option>
                 </select>
                 <select class="number-select" id="num2">
-                    <option value="" selected disabled>请选择数字</option>
+                    <option value="" selected>请选择数字</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -192,18 +212,17 @@
         </div>
     </div>
 
-    <!-- 图片展示模块 -->
     <div class="image-section">
         <img src="说明书.png" alt="说明书" class="photo">
     </div>
 
-    <!-- 弹窗 -->
     <div class="overlay" id="overlay">
-        <div class="popup" id="popupContent"></div>
+        <div class="popup" id="popupContent">
+            <button class="close-btn" id="closeBtn">×</button>
+        </div>
     </div>
 
     <script>
-        // 签文数据
         const resultData = {
             "11": "险况丛生，进退两难。静观待变，转危为安。",
             "12": "团结奋进，合作共赢，可与别人共同创办事业。",
@@ -276,8 +295,8 @@
         const searchBtn = document.getElementById('searchBtn');
         const overlay = document.getElementById('overlay');
         const popupContent = document.getElementById('popupContent');
+        const closeBtn = document.getElementById('closeBtn');
 
-        // 测算按钮点击
         searchBtn.addEventListener('click', () => {
             let n1 = num1.value;
             let n2 = num2.value;
@@ -291,19 +310,25 @@
             const key = n1 + n2;
             const text = resultData[key] || "暂无对应解析";
             popupContent.innerText = text;
+            popupContent.innerHTML += '<button class="close-btn" id="closeBtn">×</button>';
+            document.getElementById('closeBtn').addEventListener('click', closePopup);
             overlay.classList.add('active');
         });
+        
+        function closePopup() {
+            overlay.classList.remove('active');
+        }
 
-        // 点击空白关闭弹窗
         overlay.addEventListener('click', (e) => {
-            if(e.target === overlay){
-                overlay.classList.remove('active');
+            if(e.target === overlay || e.target.id === 'closeBtn'){
+                closePopup();
             }
         });
+        
+        closeBtn.addEventListener('click', closePopup);
 
-        // 回车快捷测算
         document.addEventListener('keydown', (e) => {
-            if(e.key === 'Enter'){
+            if(e.key === 'Enter') {
                 searchBtn.click();
             }
         });
