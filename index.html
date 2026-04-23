@@ -30,39 +30,52 @@
             z-index: -1;
         }
 
-        /* 顶部主容器：测算+二维码 横向排列 */
-        .top-container {
+        /* 核心容器：占屏幕上方1/2.8，匹配图示布局 */
+        .core-container {
             position: fixed;
-            top: 20px;
+            top: 0;
             left: 0;
-            width: 100vw; /* 占满屏幕宽度 */
-            padding: 0 10px; /* 防止贴边溢出 */
+            width: 100vw;
+            height: calc(100vh / 2.8); /* 屏幕高度1/2.8 */
+            padding: 10px;
             z-index: 99;
             display: flex;
-            align-items: stretch; /* 让子元素高度对齐 */
-            justify-content: space-between; /* 测算左、二维码右贴边 */
+            align-items: stretch; /* 垂直方向高度铺满 */
+            gap: 10px; /* 左侧模块与二维码间距 */
         }
 
-        /* 数字测算模块：靠左，高度自适应 */
+        /* 左侧列：测算模块 + 联系方式模块（上下排列） */
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px; /* 测算与联系方式间距 */
+            flex: 0 1 auto; /* 仅占必要宽度，不拉伸 */
+            height: 100%; /* 高度铺满核心容器 */
+        }
+
+        /* 测算模块：左侧上半区，压缩至最小 */
         .calculator-module {
-            flex: 1; /* 占剩余宽度 */
-            margin-right: 10px; /* 和二维码留间距 */
+            flex: 1; /* 占左侧列上半部分 */
             background: rgba(255, 255, 255, 0);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 25px 20px;
+            padding: 10px 15px; /* 最小内边距 */
             border-radius: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .title {
             text-align: center;
-            font-size: 22px;
+            font-size: 18px;
             color: #eb9985;
             background: #ffffff;
             border-radius: 22px;
-            padding: 8px 0;
-            margin-bottom: 15px;
+            padding: 4px 0;
+            margin-bottom: 8px;
             font-weight: bold;
         }
 
@@ -71,72 +84,72 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
         .input-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
         }
 
         .number-select {
-            width: 100px;
-            height: 40px;
-            padding: 0 8px;
+            width: 80px;
+            height: 35px;
+            padding: 0 6px;
             background: #ffffff;
             border: 1px solid #a6e8d4;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 12px;
             outline: none;
             appearance: none;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center;
-            background-size: 14px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 6px center;
+            background-size: 12px;
             text-align: center;
         }
 
+        /* 测算按钮：边框色与输入框一致 */
         .search-btn {
-            width: 90px;
-            height: 40px;
+            width: 80px;
+            height: 35px;
             background-color: #eb9985;
             color: #fff;
-            border: 2px solid #ffffff;
+            border: 1px solid #a6e8d4; /* 输入框同款边框色 */
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
         }
 
-        /* 二维码模块：右侧贴边，高度和测算模块对齐，宽度等比缩放 */
-        .qrcode-module {
-            width: auto;
-            height: 100%; /* 和测算模块等高 */
-            flex-shrink: 0;
-            display: flex;
-            align-items: center; /* 垂直居中 */
-        }
-
-        .qrcode-img {
-            height: 100%; /* 高度匹配测算模块 */
-            width: auto; /* 宽度等比缩放 */
-            max-width: 120px; /* 限制最大宽度 */
-            object-fit: contain;
-        }
-
-        /* 联系方式模块：通栏，左右对齐顶部两个板块，高度等比缩放 */
+        /* 联系方式模块：左侧下半区，无圆角，宽度铺满 */
         .contact-module {
-            position: fixed;
-            top: calc(20px + 100% + 10px); /* 在测算+二维码下方10px */
-            left: 10px;
-            right: 10px;
-            z-index: 99;
+            flex: 1; /* 占左侧列下半部分 */
+            width: 100%; /* 宽度铺满左侧列 */
+            height: 100%; /* 高度自适应 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .contact-img {
-            width: 100%; /* 宽度铺满（对齐顶部总宽度） */
-            height: auto; /* 高度等比缩放 */
-            max-height: 80px; /* 限制最大高度，保证美观 */
+            width: 100%; /* 宽度铺满模块 */
+            height: 100%; /* 高度自适应 */
             object-fit: contain;
-            border-radius: 10px;
+            border-radius: 0; /* 去除圆角 */
+        }
+
+        /* 二维码模块：右侧竖排，高度铺满核心容器，宽度自适应 */
+        .qrcode-module {
+            flex: 1; /* 占剩余所有宽度 */
+            height: 100%; /* 高度铺满核心容器 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qrcode-img {
+            height: 100%; /* 高度铺满二维码模块 */
+            width: auto; /* 宽度自适应 */
+            object-fit: contain;
         }
 
         /* 弹窗样式 */
@@ -180,9 +193,9 @@
             border: none;
         }
 
-        /* 说明书区域：适配联系方式下方 */
+        /* 说明书区域：适配核心容器下方 */
         .instruction-section {
-            margin-top: 350px; /* 适配顶部布局高度 */
+            margin-top: calc(100vh / 2.8 + 20px); /* 核心容器下方 */
             padding: 0 10px 20px;
             width: 100%;
         }
@@ -195,14 +208,13 @@
 
         /* 小屏手机微调 */
         @media (max-width: 380px) {
-            .number-select {
-                width: 90px;
+            .number-select, .search-btn {
+                width: 70px;
+                height: 30px;
+                font-size: 11px;
             }
-            .qrcode-img {
-                max-width: 100px;
-            }
-            .instruction-section {
-                margin-top: 320px;
+            .title {
+                font-size: 16px;
             }
         }
     </style>
@@ -210,49 +222,52 @@
 <body>
     <img src="背景.png" class="bg-image" alt="背景">
 
-    <!-- 顶部：测算+二维码 -->
-    <div class="top-container">
-        <!-- 数字测算模块 -->
-        <div class="calculator-module">
-            <h2 class="title">数字测算</h2>
-            <div class="select-group">
-                <div class="input-row">
-                    <select class="number-select" id="num1">
-                        <option value="" selected>请选择数字</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                    </select>
-                    <select class="number-select" id="num2">
-                        <option value="" selected>请选择数字</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                    </select>
+    <!-- 核心容器：左侧上下（测算+联系方式）+ 右侧二维码 -->
+    <div class="core-container">
+        <!-- 左侧列：测算（上）+ 联系方式（下） -->
+        <div class="left-column">
+            <!-- 测算模块 -->
+            <div class="calculator-module">
+                <h2 class="title">数字测算</h2>
+                <div class="select-group">
+                    <div class="input-row">
+                        <select class="number-select" id="num1">
+                            <option value="" selected>请选择数字</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                        <select class="number-select" id="num2">
+                            <option value="" selected>请选择数字</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </div>
+                    <button class="search-btn" id="searchBtn">测算</button>
                 </div>
-                <button class="search-btn" id="searchBtn">测算</button>
+            </div>
+
+            <!-- 联系方式模块 -->
+            <div class="contact-module">
+                <img src="联系方式.png" class="contact-img" alt="联系方式">
             </div>
         </div>
 
-        <!-- 二维码模块（右侧贴边） -->
+        <!-- 右侧二维码模块（竖排） -->
         <div class="qrcode-module">
             <img src="二维码.png" class="qrcode-img" alt="二维码">
         </div>
-    </div>
-
-    <!-- 联系方式模块（通栏，在顶部下方） -->
-    <div class="contact-module">
-        <img src="联系方式.png" class="contact-img" alt="联系方式">
     </div>
 
     <!-- 说明书区域 -->
