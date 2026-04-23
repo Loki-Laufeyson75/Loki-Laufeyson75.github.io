@@ -139,20 +139,23 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* 图片区域样式 - 位于测算卡片下方 */
+        /* 图片区域样式 - 左右铺满页面 */
         .image-section {
             margin-top: 320px; /* 避开测算卡片 */
-            padding: 20px;
+            width: 100vw; /* 宽度占满屏幕 */
+            padding: 0 !important; /* 去掉左右内边距 */
+            margin-left: calc(-50vw + 50%); /* 消除body默认居中导致的空白 */
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .photo {
-            max-width: 100%;
-            max-height: 90vh;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%; /* 宽度100%铺满 */
+            height: auto; /* 高度自适应，保持比例 */
+            max-height: 90vh; /* 限制最大高度，避免溢出 */
+            border-radius: 0 !important; /* 可选：去掉圆角，完全铺满 */
+            box-shadow: none !important; /* 可选：去掉阴影，完全贴合 */
         }
     </style>
 </head>
