@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>数字测算</title>
     <style>
         * {
@@ -16,6 +16,7 @@
             background-color: #f0f2f5;
             padding: 0;
             min-height: 100vh;
+            overflow-x: hidden; /* 禁止横向滚动 */
         }
 
         /* 背景图：拉伸全屏 */
@@ -29,37 +30,31 @@
             z-index: -1;
         }
 
-        /* 顶部布局：永远不挤、二维码完整显示 */
+        /* 顶部容器：测算+二维码+联系方式 横向排列 */
         .top-float-wrapper {
             position: fixed;
             top: 20px;
-            left: 20px;
+            left: 50%;
+            transform: translateX(-50%); /* 水平居中 */
             display: flex;
-            align-items: center;
-            gap: 16px;
+            align-items: flex-start;
+            gap: 10px; /* 模块间间距 */
             z-index: 99;
             pointer-events: none;
-            max-width: calc(100vw - 40px);
+            width: 95%; /* 适配手机宽度 */
+            max-width: 600px;
         }
 
+        /* 测算模块 */
         .container {
-            width: 320px;
+            flex: 1;
             background: rgba(255, 255, 255, 0);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 35px 20px;
+            padding: 25px 20px;
             border-radius: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             pointer-events: auto;
-        }
-
-        /* 二维码：永远完整、居中对齐 */
-        .float-qrcode {
-            width: 120px;
-            height: 120px;
-            object-fit: contain;
-            pointer-events: auto;
-            flex-shrink: 0;
         }
 
         .title {
@@ -69,21 +64,26 @@
             background: #ffffff;
             border-radius: 22px;
             padding: 8px 0;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             font-weight: bold;
         }
 
-        /* 重点修复：两个选择框 永远并排，绝不换行！ */
+        /* 输入框：两个并排，按钮在下方 */
         .select-group {
             display: flex;
-            gap: 8px;
+            flex-direction: column;
             align-items: center;
+            gap: 12px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
             justify-content: center;
-            flex-wrap: nowrap !important; /* 强制不换行 */
         }
 
         .number-select {
-            width: 90px;
+            width: 100px;
             height: 40px;
             padding: 0 8px;
             background: #ffffff;
@@ -95,11 +95,10 @@
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center;
             background-size: 14px;
             text-align: center;
-            flex-shrink: 0;
         }
 
         .search-btn {
-            width: 70px;
+            width: 90px;
             height: 40px;
             background-color: #eb9985;
             color: #fff;
@@ -107,9 +106,29 @@
             border-radius: 20px;
             font-size: 14px;
             cursor: pointer;
-            flex-shrink: 0;
         }
 
+        /* 二维码+联系方式 模块 */
+        .qrcode-contact-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: auto;
+        }
+
+        .float-qrcode {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .contact-image {
+            width: 120px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* 弹窗样式 */
         .overlay {
             position: fixed;
             top: 0;
@@ -128,8 +147,9 @@
         }
 
         .popup {
-            width: 320px;
-            padding: 35px 30px;
+            width: 90%;
+            max-width: 320px;
+            padding: 30px 25px;
             background: #fff;
             border-radius: 16px;
             font-size: 16px;
@@ -149,19 +169,35 @@
             border: none;
         }
 
-        /* 说明书：上下左右留白一致 */
+        /* 说明书区域 */
         .image-section {
-            margin-top: 320px;
-            padding: 0 22px 22px;
+            margin-top: 280px; /* 适配顶部布局 */
+            padding: 0 15px 20px;
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100%;
         }
 
         .photo {
             width: 100%;
             height: auto;
             display: block;
+        }
+
+        /* 小屏手机适配 */
+        @media (max-width: 450px) {
+            .top-float-wrapper {
+                flex-direction: column; /* 小屏纵向排列 */
+                align-items: center;
+            }
+            .qrcode-contact-wrapper {
+                flex-direction: row; /* 二维码+联系方式横向 */
+                gap: 10px;
+            }
+            .image-section {
+                margin-top: 380px;
+            }
         }
     </style>
 </head>
@@ -170,42 +206,51 @@
     <img src="背景.png" class="bg-image" alt="背景">
 
     <div class="top-float-wrapper">
+        <!-- 测算模块 -->
         <div class="container">
             <h2 class="title">数字测算</h2>
             <div class="select-group">
-                <select class="number-select" id="num1">
-                    <option value="" selected>请选择数字</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                </select>
-                <select class="number-select" id="num2">
-                    <option value="" selected>请选择数字</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                </select>
+                <div class="input-row">
+                    <select class="number-select" id="num1">
+                        <option value="" selected>请选择数字</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                    <select class="number-select" id="num2">
+                        <option value="" selected>请选择数字</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
                 <button class="search-btn" id="searchBtn">测算</button>
             </div>
         </div>
 
-        <img src="二维码.png" class="float-qrcode" alt="二维码">
+        <!-- 二维码+联系方式 -->
+        <div class="qrcode-contact-wrapper">
+            <img src="二维码.png" class="float-qrcode" alt="二维码">
+            <img src="联系方式.png" class="contact-image" alt="联系方式">
+        </div>
     </div>
 
+    <!-- 说明书 -->
     <div class="image-section">
         <img src="说明书.png" alt="说明书" class="photo">
     </div>
 
+    <!-- 弹窗 -->
     <div class="overlay" id="overlay">
         <div class="popup" id="popupContent">
             <button class="close-btn" id="closeBtn">×</button>
