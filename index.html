@@ -18,32 +18,62 @@
             min-height: 100vh;
         }
 
-        .calculator-container {
+        /* 背景图：固定全屏铺满，拉伸完整显示 */
+        .bg-image {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 100vw;
+            height: 100vh;
+            object-fit: fill;
+            z-index: -1;
+        }
+
+        /* 顶部悬浮容器：强制上下对齐 */
+        .top-float-wrapper {
+            position: fixed;
+            top: 20px;
+            left: 20px;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 20px;
+            align-items: stretch; /* 强制等高对齐 */
+            gap: 12px;
             z-index: 99;
             pointer-events: none;
+            max-width: calc(100vw - 40px);
         }
 
         .container {
             width: 375px;
-            background-color: #fff;
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 45px 25px;
             border-radius: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             pointer-events: auto;
+            flex-shrink: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 二维码：强制上下居中对齐，和模块等高视觉对齐 */
+        .float-qrcode {
+            width: 130px;
+            height: auto;
+            object-fit: contain;
+            pointer-events: auto;
+            align-self: center; /* 垂直居中 */
+            flex-shrink: 0;
         }
 
         .title {
             text-align: center;
             font-size: 24px;
-            color: #333;
+            color: #eb9985;
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 8px 0;
             margin-bottom: 35px;
             font-weight: bold;
         }
@@ -61,7 +91,8 @@
             width: 120px;
             height: 44px;
             padding: 0 12px;
-            border: 1px solid #e0e0e0;
+            background: #ffffff;
+            border: 1px solid #a6e8d4;
             border-radius: 22px;
             font-size: 16px;
             outline: none;
@@ -73,16 +104,16 @@
         }
 
         .number-select:focus {
-            border-color: #666;
-            box-shadow: 0 0 0 3px rgba(102,102,102,0.1);
+            border-color: #a6e8d4;
+            box-shadow: 0 0 0 3px rgba(166,232,212,0.2);
         }
 
         .search-btn {
             width: 88px;
             height: 44px;
-            background-color: #555;
+            background-color: #eb9985;
             color: #fff;
-            border: none;
+            border: 2px solid #ffffff;
             border-radius: 22px;
             font-size: 16px;
             cursor: pointer;
@@ -90,7 +121,7 @@
         }
 
         .search-btn:hover {
-            background-color: #333;
+            background-color: #d88270;
             transform: translateY(-2px);
         }
 
@@ -151,10 +182,10 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* 图片：左右贴屏，上下不变 */
+        /* 说明书：上下左右留白一致 */
         .image-section {
-            margin-top: 320px;
-            padding: 0;
+            margin-top: 340px;
+            padding: 0 22px 22px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -170,18 +201,24 @@
         
         @media (max-width: 400px) {
             .container {
-                width: 100%;
                 padding: 30px 15px;
+                min-width: 240px;
+            }
+            .float-qrcode {
+                width: 110px;
             }
             .image-section {
-                margin-top: 280px;
+                margin-top: 300px;
+                padding: 0 12px 12px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="calculator-container">
+    <img src="背景.png" class="bg-image" alt="背景">
+
+    <div class="top-float-wrapper">
         <div class="container">
             <h2 class="title">数字测算</h2>
             <div class="select-group">
@@ -210,6 +247,8 @@
                 <button class="search-btn" id="searchBtn">测算</button>
             </div>
         </div>
+
+        <img src="二维码.png" class="float-qrcode" alt="二维码">
     </div>
 
     <div class="image-section">
