@@ -18,7 +18,7 @@
             min-height: 100vh;
         }
 
-        /* 背景图：固定全屏铺满，拉伸完整显示 */
+        /* 背景图：拉伸全屏 */
         .bg-image {
             position: fixed;
             top: 0;
@@ -29,100 +29,85 @@
             z-index: -1;
         }
 
-        /* 顶部悬浮容器：强制上下对齐 */
+        /* 顶部布局：永远不挤、二维码完整显示 */
         .top-float-wrapper {
             position: fixed;
             top: 20px;
             left: 20px;
             display: flex;
-            align-items: stretch; /* 强制等高对齐 */
-            gap: 12px;
+            align-items: center;
+            gap: 16px;
             z-index: 99;
             pointer-events: none;
             max-width: calc(100vw - 40px);
         }
 
         .container {
-            width: 375px;
+            width: 320px;
             background: rgba(255, 255, 255, 0);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 45px 25px;
+            padding: 35px 20px;
             border-radius: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             pointer-events: auto;
-            flex-shrink: 1;
-            min-width: 300px;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* 二维码：强制上下居中对齐，和模块等高视觉对齐 */
+        /* 二维码：永远完整、居中对齐 */
         .float-qrcode {
-            width: 130px;
-            height: auto;
+            width: 120px;
+            height: 120px;
             object-fit: contain;
             pointer-events: auto;
-            align-self: center; /* 垂直居中 */
             flex-shrink: 0;
         }
 
         .title {
             text-align: center;
-            font-size: 24px;
+            font-size: 22px;
             color: #eb9985;
             background: #ffffff;
             border-radius: 22px;
             padding: 8px 0;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             font-weight: bold;
         }
 
+        /* 重点修复：两个选择框 永远并排，绝不换行！ */
         .select-group {
             display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 8px;
             align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap !important; /* 强制不换行 */
         }
 
         .number-select {
-            width: 120px;
-            height: 44px;
-            padding: 0 12px;
+            width: 90px;
+            height: 40px;
+            padding: 0 8px;
             background: #ffffff;
             border: 1px solid #a6e8d4;
-            border-radius: 22px;
-            font-size: 16px;
+            border-radius: 20px;
+            font-size: 14px;
             outline: none;
             appearance: none;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
-            background-size: 16px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 8px center;
+            background-size: 14px;
             text-align: center;
-            transition: all 0.3s;
-        }
-
-        .number-select:focus {
-            border-color: #a6e8d4;
-            box-shadow: 0 0 0 3px rgba(166,232,212,0.2);
+            flex-shrink: 0;
         }
 
         .search-btn {
-            width: 88px;
-            height: 44px;
+            width: 70px;
+            height: 40px;
             background-color: #eb9985;
             color: #fff;
             border: 2px solid #ffffff;
-            border-radius: 22px;
-            font-size: 16px;
+            border-radius: 20px;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .search-btn:hover {
-            background-color: #d88270;
-            transform: translateY(-2px);
+            flex-shrink: 0;
         }
 
         .overlay {
@@ -136,7 +121,6 @@
             justify-content: center;
             align-items: center;
             z-index: 999;
-            animation: fadeIn 0.3s ease;
         }
 
         .overlay.active {
@@ -148,12 +132,9 @@
             padding: 35px 30px;
             background: #fff;
             border-radius: 16px;
-            text-align: left;
             font-size: 16px;
             line-height: 1.9;
             color: #333;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: popUp 0.3s ease;
             position: relative;
         }
         
@@ -167,24 +148,10 @@
             background: none;
             border: none;
         }
-        
-        .close-btn:hover {
-            color: #333;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes popUp {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
 
         /* 说明书：上下左右留白一致 */
         .image-section {
-            margin-top: 340px;
+            margin-top: 320px;
             padding: 0 22px 22px;
             display: flex;
             justify-content: center;
@@ -195,22 +162,6 @@
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 0;
-            box-shadow: none;
-        }
-        
-        @media (max-width: 400px) {
-            .container {
-                padding: 30px 15px;
-                min-width: 240px;
-            }
-            .float-qrcode {
-                width: 110px;
-            }
-            .image-section {
-                margin-top: 300px;
-                padding: 0 12px 12px;
-            }
         }
     </style>
 </head>
@@ -349,8 +300,6 @@
             const key = n1 + n2;
             const text = resultData[key] || "暂无对应解析";
             popupContent.innerText = text;
-            popupContent.innerHTML += '<button class="close-btn" id="closeBtn">×</button>';
-            document.getElementById('closeBtn').addEventListener('click', closePopup);
             overlay.classList.add('active');
         });
         
@@ -365,11 +314,8 @@
         });
         
         closeBtn.addEventListener('click', closePopup);
-
         document.addEventListener('keydown', (e) => {
-            if(e.key === 'Enter') {
-                searchBtn.click();
-            }
+            if(e.key === 'Enter') searchBtn.click();
         });
     </script>
 </body>
